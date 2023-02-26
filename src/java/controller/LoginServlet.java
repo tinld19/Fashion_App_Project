@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
@@ -54,21 +55,50 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
        String user=request.getParameter("user");
        String pass=request.getParameter("pass");
+       String remember = request.getParameter("rem");
+       
+       HttpSession session = request.getSession();
        CustomerDB db = new CustomerDB();
-        Customer c=null;
+       Customer c=null;
+       
+       // Create Cookie for account
+        Cookie cookieUser = new Cookie("cuser", user);
+        Cookie cookiePass = new Cookie("cpass", pass);
+        Cookie cookieRem = new Cookie("crem", remember);
+
+       
         try {
             c=db.login(user);
+            if(c!=null && c.getPassword().equals(pass)){
+            // Check Account and ticked "Remember-me"
+                    
+                if(remember != null){
+                    cookieUser.setMaxAge(60 * 60 * 24);
+                    cookiePass.setMaxAge(60 * 60 * 24);
+                    cookieRem.setMaxAge(60 * 60 * 24);
+                }else{
+                    cookieUser.setMaxAge(0);
+                    cookiePass.setMaxAge(0);
+                    cookieRem.setMaxAge(0); 
+                }
+            
+                // Add Cookie of customer to browser
+                response.addCookie(cookieUser);
+                response.addCookie(cookiePass);
+                response.addCookie(cookieRem);
+                
+            }else{
+                // If do not have account
+                request.setAttribute("error", "username or password invalid!!!");
+                request.getRequestDispatcher("Register.jsp").forward(request, response);
+            }
+            
+            session.setAttribute("account", c);
+            request.getRequestDispatcher("LoginSuccess.jsp").forward(request, response);
+            response.sendRedirect("LoginSucces.jsp");
+            
         } catch (Exception e) {
              Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, e);
-        }
-        if(c!=null && c.getPassword().equals(pass)){
-            Cookie loginCookie = new Cookie("user", user);
-            loginCookie.setMaxAge(30 * 60);
-            response.addCookie(loginCookie);
-            response.sendRedirect("LoginSuccess.jsp");
-        } else{
-            response.sendRedirect("Register.jsp");
-          
         }
     }
 

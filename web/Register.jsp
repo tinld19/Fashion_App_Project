@@ -30,6 +30,7 @@
     }
   </style>
 <body>
+    <h3 style="color: red; text-align: center">${requestScope.error}</h3>
      <form action="register" method="get">
   <div class="flex items-center min-h-screen bg-gray-50">
     <div class="flex-1 h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl">

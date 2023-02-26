@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <meta charset="UTF-8">
@@ -29,16 +30,6 @@
     }
   </style>
   <body>
- <%
-String userName = null;
-Cookie[] cookies = request.getCookies();
-if(cookies !=null){
-for(Cookie cookie : cookies){
-	if(cookie.getName().equals("user")) userName = cookie.getValue();
-}
-}
-if(userName == null) response.sendRedirect("login.html");
-%>
     <div class="container">
         <div class="content-wrapper font-karla max-w-screen-2xl text-base mx-auto px-8 bg-white text-black">
             <header class="my-6 px-10">
@@ -76,7 +67,7 @@ if(userName == null) response.sendRedirect("login.html");
                         <li
                             class="cursor-pointer py-1 hover:text-gray-800 relative after:absolute after:bottom-0 after:left-0 after:bg-slate-900 
                             after:h-0.5 after:w-0 hover:after:w-full after:transition-all after:ease-out after:duration-300">
-                            <a href="Login.jsp" class=""> <%=userName %></a>
+                            <a href="Login.jsp" class=""> ${sessionScope.account.userName} </a>
                         </li>
                         <li
                             class="cursor-pointer py-1 hover:text-gray-800 relative after:absolute after:bottom-0 after:left-0 after:bg-slate-900 
@@ -102,6 +93,13 @@ if(userName == null) response.sendRedirect("login.html");
                 </nav>
             </header>
             <main>
+                
+                
+                
+                
+                        
+                    
+                
                 <div class="slider h-[530px] bg-[url(./images/anhngang.jpg)] bg-cover bg-no-repeat bg-top">
                     <div class="w-full h-full flex justify-center items-center bg-gray-900 bg-opacity-50">
                         <div class="mx-16 text-white text-center">
